@@ -31,9 +31,8 @@
 
     
     [self refreshDarkMode];
-    
-    //Change theme
-    [self itemClicked:nil];
+    [self turnInternetOff];
+
 }
 
 - (void)refreshDarkMode {
