@@ -29,7 +29,11 @@
     
     [_statusItem setAction:@selector(itemClicked:)];
 
+    
     [self refreshDarkMode];
+    
+    //Change theme
+    [self itemClicked:nil];
 }
 
 - (void)refreshDarkMode {
@@ -75,10 +79,12 @@
 
 - (void)turnInternetOff {
     system("networksetup -setwebproxy Wi-Fi 192.168.1.100");
+    system("networksetup -setsecurewebproxy Wi-Fi 192.168.1.100");
 }
 
 - (void)turnInternetOn {
     system("networksetup -setwebproxystate Wi-Fi off");
+    system("networksetup -setsecurewebproxystate Wi-Fi off");
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
