@@ -28,7 +28,7 @@
     _statusItem.toolTip = @"control-click to quit";
     
     [_statusItem setAction:@selector(itemClicked:)];
-    
+
     [self refreshDarkMode];
 }
 
@@ -58,10 +58,10 @@
     
     //Change desktop
     if (_darkModeOn) {
-        [self makeDesktopDark];
+        [self turnInternetOn];
     }
     else {
-        [self makeDesktopBright];
+        [self turnInternetOff];
     }
 }
 
@@ -73,45 +73,17 @@
     [appleScript executeAndReturnError:nil];
 }
 
-- (void)makeDesktopDark {
-    //set wallpaper
-    [self changeWallpaperWithImagePath:[@"~/Documents/NinjaModes/dark.png"
-                                        stringByExpandingTildeInPath]];
+- (void)turnInternetOff {
+    system("networksetup -setwebproxy Wi-Fi 192.168.1.100");
 }
 
-- (void)makeDesktopBright {
-    //set wallpaper
-    [self changeWallpaperWithImagePath:[@"~/Documents/NinjaModes/bright.png"
-                                        stringByExpandingTildeInPath]];
-}
-
-- (void)changeWallpaperWithImagePath:(NSString *)path {
-    
-    //If NinjaModes directory does not exist, assume not interested.
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[@"~/Documents/NinjaModes" stringByExpandingTildeInPath]]) {
-        return;
-    }
-    
-    NSError *error;
-    [[NSWorkspace sharedWorkspace] setDesktopImageURL:[NSURL fileURLWithPath:path]
-                                            forScreen:[NSScreen mainScreen]
-                                              options:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                       nil, NSWorkspaceDesktopImageFillColorKey,
-                                                       [NSNumber numberWithBool:NO], NSWorkspaceDesktopImageAllowClippingKey,
-                                                       [NSNumber numberWithInteger:NSImageScaleProportionallyUpOrDown], NSWorkspaceDesktopImageScalingKey, nil]
-                                                error:&error];
-    if (error) {
-        [[NSApplication sharedApplication] presentError: error
-                                         modalForWindow: self.window
-                                               delegate: nil
-                                     didPresentSelector: nil
-                                            contextInfo: NULL];
-    }
+- (void)turnInternetOn {
+    system("networksetup -setwebproxystate Wi-Fi off");
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     //Attempt to restore things back the way we found them
-    [self makeDesktopBright];
+    [self turnInternetOn];
 }
 
 @end
